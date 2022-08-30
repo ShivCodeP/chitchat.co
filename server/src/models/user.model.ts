@@ -4,6 +4,7 @@ interface IUser {
     username: string;
     email: string;
     password: string;
+    profile_avatar_url: string;
     versionKey: Boolean;
     timestamps: Boolean;
     checkpassword: Function;
@@ -13,6 +14,7 @@ const userSchema = new Schema<IUser>({
     username:{type: String,required: true,unique: true},
     email:{type:String, required:true, unique:true},
     password:{type:String,required:true},
+    profile_avatar_url:{type: String,required:false}
 },
 {
     versionKey: false,
