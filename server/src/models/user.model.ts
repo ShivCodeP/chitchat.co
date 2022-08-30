@@ -5,6 +5,7 @@ interface IUser {
     email: string;
     password: string;
     profile_avatar_url: string;
+    isAdmin: Boolean;
     versionKey: Boolean;
     timestamps: Boolean;
     checkpassword: Function;
@@ -14,7 +15,12 @@ const userSchema = new Schema<IUser>({
     username:{type: String,required: true,unique: true},
     email:{type:String, required:true, unique:true},
     password:{type:String,required:true},
-    profile_avatar_url:{type: String,required:false}
+    profile_avatar_url:{type: String,required:false,default:"https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"},
+    isAdmin: {
+        type: Boolean,
+        required: true,
+        default: false,
+      }
 },
 {
     versionKey: false,
