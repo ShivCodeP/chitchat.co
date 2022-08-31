@@ -1,1 +1,1 @@
-export {login,register} from "./user.controller"
+export {login,register,allUsers} from "./user.controller"
