@@ -6,6 +6,7 @@ import session from "express-session";
 import bodyParser from "body-parser";
 import connectMongo from 'connect-mongodb-session';
 import { MongoClient, MongoClientOptions } from 'mongodb';
+import {notFound,errorHandler} from "./middlewares"
 
 declare function ConnectMongoDBSession(fn: typeof session): typeof ConnectMongoDBSession.MongoDBStore;
 
@@ -56,12 +57,6 @@ const app = express();
 
 const TWO_HOURS = 1000*60*60*2;
 
-interface Env_Var {
-    NODE_ENV: String;
-    SESS_NAME: String;
-    SESS_SECRET: String;
-}
-
 const {
     NODE_ENV,
     SESS_NAME ,
@@ -87,8 +82,8 @@ app.use(session({
 }))
 
 
-app.use("/",(req,res) => {
-    res.send("hello world")
+app.get("/",(req,res) => {
+    return res.send("hello world")
 })
 
 app.use("/auth/user",userRoutes)

@@ -31,7 +31,7 @@ const login = async (req:Request & {session: Session},res:Response) => {
         // store token in session
         req.session.id = token;
     
-        res.status(201).json({user,token});
+        res.status(201).json({user});
         
     } catch (error) {
         console.log(error)
@@ -43,25 +43,23 @@ const register = async (req: Request,res:Response) => {
     try {
         // TODO: User image hosted on imgur 
 
-        const {username,email,password,profile_avatar_url} = req.body;
+        const {username,email,password} = req.body;
 
-        const user = await Users.find({$or: [username,email]});
-        if(user)
-          return res.send(404).send({message:'User already exist with this Username/Email'});
-        
+        const user = await Users.findOne({username}).lean().exec();
+        if(user){
+            return res.send(404).send({message:'User already exist with this Username/Email'});
+        }
+        console.log(username,email,password)
         try {
             await Users.create({
                 username,
                 email,
-                password,
-                profile_avatar_url
-    
+                password
             })
         } catch (error) {
             console.log(error)
             return res.send({message:"Some went wrong"})
         }
-
         return res.status(200).send({message: "Successfully Registered"});
 
         
@@ -71,4 +69,8 @@ const register = async (req: Request,res:Response) => {
     }
 }
 
-export {login,register}
+const getLogin = (req: Request,res:Response) => {
+    res.send("Login page")
+}
+
+export {login,register,getLogin}

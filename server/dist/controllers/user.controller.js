@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = exports.login = void 0;
+exports.getLogin = exports.register = exports.login = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const models_1 = require("../models");
@@ -60,7 +60,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const token = newToken(user);
         // store token in session
         req.session.id = token;
-        res.status(201).json({ user, token });
+        res.status(201).json({ user });
     }
     catch (error) {
         console.log(error);
@@ -71,16 +71,17 @@ exports.login = login;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // TODO: User image hosted on imgur 
-        const { username, email, password, profile_avatar_url } = req.body;
-        const user = yield models_1.Users.find({ $or: [username, email] });
-        if (user)
+        const { username, email, password } = req.body;
+        const user = yield models_1.Users.findOne({ username }).lean().exec();
+        if (user) {
             return res.send(404).send({ message: 'User already exist with this Username/Email' });
+        }
+        console.log(username, email, password);
         try {
             yield models_1.Users.create({
                 username,
                 email,
-                password,
-                profile_avatar_url
+                password
             });
         }
         catch (error) {
@@ -95,3 +96,7 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.register = register;
+const getLogin = (req, res) => {
+    res.send("Login page");
+};
+exports.getLogin = getLogin;

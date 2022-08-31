@@ -12,7 +12,7 @@ const userSchema = new mongoose_1.Schema({
     profile_avatar_url: { type: String, required: false, default: "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg" },
     isAdmin: {
         type: Boolean,
-        required: true,
+        required: false,
         default: false,
     }
 }, {
