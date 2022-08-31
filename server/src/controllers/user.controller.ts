@@ -69,8 +69,5 @@ const register = async (req: Request,res:Response) => {
     }
 }
 
-const getLogin = (req: Request,res:Response) => {
-    res.send("Login page")
-}
 
-export {login,register,getLogin}
+export {login,register}
