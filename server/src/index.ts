@@ -1,5 +1,4 @@
-import * as dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 import express from "express";
 import { Connect } from "./configs";
 import { userRoutes } from "./routes";
@@ -64,9 +63,9 @@ interface Env_Var {
 }
 
 const {
-    NODE_ENV = "development",
-    SESS_NAME = "sid",
-    SESS_SECRET = "shivam!aditya!pandey"
+    NODE_ENV,
+    SESS_NAME ,
+    SESS_SECRET,
 } = process.env;
 
 const IN_PROD = NODE_ENV === 'production';
@@ -94,10 +93,12 @@ app.use("/",(req,res) => {
 
 app.use("/auth/user",userRoutes)
 
-app.listen(3000,async() => {
+const Port = process.env.PORT;
+
+app.listen(Port,async() => {
     try {
         await Connect()
-        console.log("Server is listening on port 3000")
+        console.log(`Server is listening on port ${Port}`)
     } catch (error) {
         console.log(error)
     }
