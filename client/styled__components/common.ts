@@ -67,6 +67,12 @@ export const Form = styled.form`
   border-radius: 10px;
   gap: 12px;
   transition: all 0.2s ease-in-out;
+  @media (max-width: 768px) {
+    width: 80%;
+  }
+  @media (max-width: 425px) {
+    width: 95%;
+  }
 `;
 export const H1 = styled.h1`
   font-size: 32px;

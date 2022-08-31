@@ -1,4 +1,6 @@
+import { useRouter } from "next/router";
 import React, { useReducer, useState } from "react";
+import { loginReq } from "../../src/Fetch/Auth/POSTreq";
 import {
   Button,
   FlexBox,
@@ -8,6 +10,7 @@ import {
   Text,
 } from "../../styled__components/common";
 import Logo from "../Logo/Logo";
+import { ValidateLogin } from "./loginValidator";
 
 type User = {
   email: string;
@@ -21,7 +24,7 @@ const Login = ({ setShowRegister }: Props) => {
     email: "",
     password: "",
   });
-  const handleChange = (e: any) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     let { value, name } = e.target;
     setForm({
       ...form,
@@ -29,9 +32,16 @@ const Login = ({ setShowRegister }: Props) => {
     });
     console.log(form);
   };
-
+  const router = useRouter();
+  const handleSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    let val = ValidateLogin({ ...form });
+    if (val) {
+      await loginReq({ ...form }, router);
+    }
+  };
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <div style={{ textAlign: "center" }}>
         <Logo />
       </div>
@@ -65,7 +75,7 @@ const Login = ({ setShowRegister }: Props) => {
         >
           Create an account
         </Text>
-        <Button>Login</Button>
+        <Button type="submit">Login</Button>
       </FlexBox>
     </Form>
   );

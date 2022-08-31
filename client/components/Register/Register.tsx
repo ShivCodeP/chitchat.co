@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import React, { useReducer, useState } from "react";
-import { toast } from "react-toastify";
 import { registerReq } from "../../src/Fetch/Auth/POSTreq";
 import {
   Button,
@@ -12,7 +11,6 @@ import {
 } from "../../styled__components/common";
 import { Label } from "../../styled__components/register";
 import Logo from "../Logo/Logo";
-import styles from "./register.module.css";
 import { registerValidator } from "./RegisterValidator";
 type User = {
   name: string;
@@ -33,7 +31,7 @@ const Register = ({ setShowRegister }: Props) => {
     profile_avatar: "",
   });
   const router = useRouter();
-  const handleChange = (e: any) => {
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     let { value, name } = e.target;
     setForm({
       ...form,
@@ -42,7 +40,7 @@ const Register = ({ setShowRegister }: Props) => {
     console.log(form);
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     let val = registerValidator(form);
     if (val) {

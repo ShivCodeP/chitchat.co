@@ -1,7 +1,7 @@
+import Router, { NextRouter } from "next/dist/shared/lib/router/router";
 import { toast } from "react-toastify";
 
 const url = "https://chitchat-backendapi.herokuapp.com";
-// const url = "http://locahost:5000";
 type User = {
   name: string;
   email: string;
@@ -34,6 +34,27 @@ export const registerReq = async (payload: User, router: any) => {
         return;
       }
       localStorage.setItem("auth", res.message);
+      router.push("/home");
+    });
+};
+
+type LoginUser = {
+  email: string;
+  password: string;
+};
+
+export const loginReq = async (payload: LoginUser, router: NextRouter) => {
+  await fetch(`${url}/auth/user/login`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => res.json())
+    .then((res) => {
+      if (res.token) {
+      }
       router.push("/home");
     });
 };
