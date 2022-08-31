@@ -29,6 +29,7 @@ const Login = ({ setShowRegister }: Props) => {
     });
     console.log(form);
   };
+
   return (
     <Form>
       <div style={{ textAlign: "center" }}>

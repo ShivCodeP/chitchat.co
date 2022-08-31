@@ -5,6 +5,7 @@ import { useState } from "react";
 import Login from "../components/Login/Login";
 import Logo from "../components/Logo/Logo";
 import Register from "../components/Register/Register";
+import { registerReq } from "../src/Fetch/Auth/POSTreq";
 import { Box, Button, Input, MainBox } from "../styled__components/common";
 
 const Home: NextPage = () => {

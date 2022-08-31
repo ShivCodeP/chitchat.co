@@ -1,4 +1,6 @@
 import React, { useReducer, useState } from "react";
+import { toast } from "react-toastify";
+import { registerReq } from "../../src/Fetch/Auth/POSTreq";
 import {
   Button,
   FlexBox,
@@ -10,6 +12,7 @@ import {
 import { Label } from "../../styled__components/register";
 import Logo from "../Logo/Logo";
 import styles from "./register.module.css";
+import { registerValidator } from "./RegisterValidator";
 type User = {
   name: string;
   email: string;
@@ -36,8 +39,16 @@ const Register = ({ setShowRegister }: Props) => {
     });
     console.log(form);
   };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    let val = registerValidator(form);
+    if (val) {
+      await registerReq(form);
+    }
+  };
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       <div style={{ textAlign: "center" }}>
         <Logo />
       </div>
@@ -103,7 +114,7 @@ const Register = ({ setShowRegister }: Props) => {
         >
           Already have an account?
         </Text>
-        <Button>Register</Button>
+        <Button type="submit">Register</Button>
       </FlexBox>
     </Form>
   );
