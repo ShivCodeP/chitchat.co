@@ -1,5 +1,7 @@
-// const url = "https://chitchat-backendapi.herokuapp.com";
-const url = "http://locahost:5000";
+import { toast } from "react-toastify";
+
+const url = "https://chitchat-backendapi.herokuapp.com";
+// const url = "http://locahost:5000";
 type User = {
   name: string;
   email: string;
@@ -7,13 +9,19 @@ type User = {
   profile_avatar: string;
   confirmPassword?: string;
 };
-export const registerReq = async (payload: User) => {
+export const registerReq = async (payload: User, router: any) => {
+  payload.profile_avatar = payload.profile_avatar
+    ? payload.profile_avatar
+    : "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg";
+  console.log(payload);
   await fetch(`${url}/auth/user/register`, {
     method: "POST",
     body: JSON.stringify({
-      usernanme: payload.name,
-      email: payload.email,
+      username: payload.name,
       password: payload.password,
+      email: payload.email,
+      profile_avatar_url: payload.profile_avatar,
+      isAdmin: false,
     }),
     headers: {
       "Content-Type": "application/json",
@@ -21,6 +29,11 @@ export const registerReq = async (payload: User) => {
   })
     .then((res) => res.json())
     .then((res) => {
-      console.log(res);
+      if (res.message !== "Successfully Registered") {
+        toast.error(res.message);
+        return;
+      }
+      localStorage.setItem("auth", res.message);
+      router.push("/home");
     });
 };

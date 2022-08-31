@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import React, { useReducer, useState } from "react";
 import { toast } from "react-toastify";
 import { registerReq } from "../../src/Fetch/Auth/POSTreq";
@@ -31,6 +32,7 @@ const Register = ({ setShowRegister }: Props) => {
     confirmPassword: "",
     profile_avatar: "",
   });
+  const router = useRouter();
   const handleChange = (e: any) => {
     let { value, name } = e.target;
     setForm({
@@ -44,7 +46,7 @@ const Register = ({ setShowRegister }: Props) => {
     e.preventDefault();
     let val = registerValidator(form);
     if (val) {
-      await registerReq(form);
+      await registerReq({ ...form }, router);
     }
   };
   return (
