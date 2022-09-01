@@ -6,20 +6,6 @@ import session from "express-session";
 import bodyParser from "body-parser";
 import connectMongo from 'connect-mongodb-session';
 import {Server, Socket} from "socket.io";
-
-interface ServerToClientEvents {
-    noArg: () => void;
-    basicEmit: (a: number, b: string, c: Buffer) => void;
-    withAck: (d: string, callback: (e: number) => void) => void;
-  }
-  
-  interface ClientToServerEvents {
-    hello: () => void;
-  }
-  
-  interface InterServerEvents {
-    ping: () => void;
-  }
   
 
 const MongoDBStore = connectMongo(session)
