@@ -1,28 +1,24 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { AiOutlineDown } from "react-icons/ai";
 import { BsFillBellFill } from "react-icons/bs";
 import { Input } from "../../styled__components/common";
-import { Badge, HomeBox, Nav } from "../../styled__components/home";
+import { Badge, Hamburger, HomeBox, Nav } from "../../styled__components/home";
 import Logo from "../Logo/Logo";
 
 const Navigation = () => {
+  const [showNav, setShowNav] = useState<boolean>(true);
+  const handleHamburger = () => {
+    console.log(showNav);
+    setShowNav(!showNav);
+  };
   return (
-    <HomeBox>
-      <Nav>
+    <Nav showNav={showNav}>
+      <div>
         <Input placeholder="Search user..." />
 
+        <Logo />
         <div>
-          <Logo />
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
           <span style={{ position: "relative", cursor: "pointer" }}>
             <BsFillBellFill style={{ fontSize: "20px", color: "#474545" }} />
             <Badge>0</Badge>
@@ -35,13 +31,14 @@ const Navigation = () => {
               width={30}
               style={{ borderRadius: "50%" }}
             />
-            <sub>
+            {/* <sub>
               <AiOutlineDown />
-            </sub>
+            </sub> */}
           </span>
         </div>
-      </Nav>
-    </HomeBox>
+      </div>
+      <Hamburger onClick={handleHamburger}>☰</Hamburger>
+    </Nav>
   );
 };
 

@@ -30,7 +30,6 @@ const Register = ({ setShowRegister }: Props) => {
     confirmPassword: "",
     profile_avatar: "",
   });
-  const router = useRouter();
   const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     let { value, name } = e.target;
     setForm({
@@ -44,7 +43,7 @@ const Register = ({ setShowRegister }: Props) => {
     e.preventDefault();
     let val = registerValidator(form);
     if (val) {
-      await registerReq({ ...form }, router);
+      await registerReq({ ...form }, setShowRegister);
     }
   };
   return (

@@ -43,7 +43,6 @@ export const Input = styled.input`
   color: grey;
   background: #ffffff;
   border-radius: 6px;
-  text-transform: capitalize;
   &:focus {
     border-bottom: 2px solid ${secondary};
 

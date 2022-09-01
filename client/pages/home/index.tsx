@@ -3,11 +3,14 @@ import { MainBox } from "../../styled__components/common";
 
 import Navigation from "../../components/ForHome/Navigation";
 import HomeContent from "../../components/ForHome/HomeContent";
+import { HomeBox } from "../../styled__components/home";
 const index = () => {
   return (
     <MainBox>
-      <Navigation />
-      <HomeContent />
+      <HomeBox>
+        <Navigation />
+        <HomeContent />
+      </HomeBox>
     </MainBox>
   );
 };
