@@ -1,36 +1,26 @@
 import "dotenv/config";
 import express from "express";
 import { Connect } from "./configs";
-import { userRoutes } from "./routes";
+import { userRoutes,chatRoutes, messageRoutes } from "./routes";
 import session from "express-session";
 import bodyParser from "body-parser";
 import connectMongo from 'connect-mongodb-session';
-import { MongoClient, MongoClientOptions } from 'mongodb';
-import {notFound,errorHandler} from "./middlewares"
+import {Server, Socket} from "socket.io";
 
-declare function ConnectMongoDBSession(fn: typeof session): typeof ConnectMongoDBSession.MongoDBStore;
-
-declare namespace ConnectMongoDBSession {
-    class MongoDBStore extends session.Store {
-        constructor(connection?: MongoDBSessionOptions, callback?: (error: Error) => void);
-        client: MongoClient;
-
-        get(sid: string, callback: (err: any, session?: session.SessionData | null) => void): void;
-        set(sid: string, session: session.SessionData, callback?: (err?: any) => void): void;
-        destroy(sid: string, callback?: (err?: any) => void): void;
-        all(callback: (err: any, obj?: session.SessionData[] | { [sid: string]: session.SessionData; } | null) => void): void;
-        clear(callback?: (err?: any) => void): void;
-    }
-
-    interface MongoDBSessionOptions {
-        uri: string;
-        collection: string;
-        expires?: number | undefined;
-        databaseName?: string | undefined;
-        connectionOptions?: MongoClientOptions | undefined;
-        idField?: string | undefined;
-    }
-}
+interface ServerToClientEvents {
+    noArg: () => void;
+    basicEmit: (a: number, b: string, c: Buffer) => void;
+    withAck: (d: string, callback: (e: number) => void) => void;
+  }
+  
+  interface ClientToServerEvents {
+    hello: () => void;
+  }
+  
+  interface InterServerEvents {
+    ping: () => void;
+  }
+  
 
 const MongoDBStore = connectMongo(session)
 let store = new MongoDBStore({
@@ -86,15 +76,58 @@ app.get("/",(req,res) => {
     return res.send("hello world")
 })
 
-app.use("/auth/user",userRoutes)
+app.use("/auth/user",userRoutes);
+app.use("/api/chat",chatRoutes);
+app.use("/api/messsage",messageRoutes)
 
 const Port = process.env.PORT;
 
-app.listen(Port,async() => {
+const server = app.listen(Port,async() => {
     try {
         await Connect()
         console.log(`Server is listening on port ${Port}`)
     } catch (error) {
         console.log(error)
     }
+})
+
+const io = new Server(server,{
+    pingTimeout: 60000,
+    cors: {
+        origin: "https://chitchat-backendapi.herokuapp.com"
+    }
+})
+
+io.on("connection",(socket) => {
+    console.log("connected to socket.io");
+    socket.on("setup",(userData) => {
+        socket.join(userData._id);
+        socket.emit("connected");
+    })
+    
+    socket.on("join chat",(room) => {
+        socket.join(room);
+        console.log("User joined the room "+room)
+    })
+
+    socket.on("new message",(newMessageRecieved) => {
+        let chat = newMessageRecieved.chat;
+        
+        if(!chat.users) return console.log("chat.users not defined");
+        
+        chat.users.map((user:Object&{_id:string}) => {
+            if(user._id === newMessageRecieved.sender._id) return ;
+
+            socket.in(user._id).emit("message recieved",newMessageRecieved)
+        })
+    })
+
+    socket.on("typing",(room) => socket.in(room).emit("typing"));
+    socket.on("stop typing",(room) => socket.in(room).emit("stop typing"))
+
+    socket.off("setup", (userData) => {
+        console.log("User Disconnected");
+        socket.leave(userData._id)
+    })
+
 })

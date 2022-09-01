@@ -47,7 +47,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, username } = req.body;
         // check if the email address provided already exist 
-        let user = yield models_1.Users.findOne({ email });
+        let user = yield models_1.Users.findOne({ email }).select("-password");
         // if it does not exist then throw an error 
         if (!user)
             return res.status(404).json({ message: "Please provide correct credentials" });
