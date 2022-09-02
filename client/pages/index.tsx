@@ -12,6 +12,7 @@ import { Box, Button, Input, MainBox } from "../styled__components/common";
 
 const Home: NextPage = () => {
   const [showRegister, setShowRegister] = useState<boolean>(true);
+
   const router = useRouter();
   useEffect(() => {
     let getToken = getCookie("token");
@@ -19,6 +20,7 @@ const Home: NextPage = () => {
       router.push("/home");
     }
   }, [router]);
+
   return (
     <MainBox>
       <Head>

@@ -5,7 +5,7 @@ import { userRoutes,chatRoutes, messageRoutes } from "./routes";
 import session from "express-session";
 import bodyParser from "body-parser";
 import connectMongo from 'connect-mongodb-session';
-import {Server, Socket} from "socket.io";
+import {Server} from "socket.io";
 import cors from "cors";
 
 const MongoDBStore = connectMongo(session)
