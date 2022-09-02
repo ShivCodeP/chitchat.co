@@ -6,21 +6,7 @@ import session from "express-session";
 import bodyParser from "body-parser";
 import connectMongo from 'connect-mongodb-session';
 import {Server, Socket} from "socket.io";
-
-interface ServerToClientEvents {
-    noArg: () => void;
-    basicEmit: (a: number, b: string, c: Buffer) => void;
-    withAck: (d: string, callback: (e: number) => void) => void;
-  }
-  
-  interface ClientToServerEvents {
-    hello: () => void;
-  }
-  
-  interface InterServerEvents {
-    ping: () => void;
-  }
-  
+import cors from "cors";
 
 const MongoDBStore = connectMongo(session)
 let store = new MongoDBStore({
@@ -55,6 +41,7 @@ const {
 
 const IN_PROD = NODE_ENV === 'production';
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.json());
 
@@ -78,7 +65,7 @@ app.get("/",(req,res) => {
 
 app.use("/auth/user",userRoutes);
 app.use("/api/chat",chatRoutes);
-app.use("/api/messsage",messageRoutes)
+app.use("/api/message",messageRoutes)
 
 const Port = process.env.PORT;
 
@@ -94,20 +81,18 @@ const server = app.listen(Port,async() => {
 const io = new Server(server,{
     pingTimeout: 60000,
     cors: {
-        origin: "https://chitchat-backendapi.herokuapp.com"
+        origin: "http://localhost:3000"
     }
 })
 
 io.on("connection",(socket) => {
-    console.log("connected to socket.io");
     socket.on("setup",(userData) => {
-        socket.join(userData._id);
+        socket.join(userData);
         socket.emit("connected");
     })
     
     socket.on("join chat",(room) => {
         socket.join(room);
-        console.log("User joined the room "+room)
     })
 
     socket.on("new message",(newMessageRecieved) => {
@@ -115,10 +100,10 @@ io.on("connection",(socket) => {
         
         if(!chat.users) return console.log("chat.users not defined");
         
-        chat.users.map((user:Object&{_id:string}) => {
-            if(user._id === newMessageRecieved.sender._id) return ;
-
+        chat.users.forEach((user:Object&{_id:string}) => {
+            if(user._id === newMessageRecieved.sender._id)  return ;
             socket.in(user._id).emit("message recieved",newMessageRecieved)
+
         })
     })
 
@@ -127,7 +112,7 @@ io.on("connection",(socket) => {
 
     socket.off("setup", (userData) => {
         console.log("User Disconnected");
-        socket.leave(userData._id)
+        socket.leave(userData)
     })
 
 })
