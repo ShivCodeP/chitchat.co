@@ -9,6 +9,7 @@ const nextConfig = {
   images: {
     path: '*'
   },
+  ignoreBuildErrors: true,
 };
 
 module.exports = nextConfig;
