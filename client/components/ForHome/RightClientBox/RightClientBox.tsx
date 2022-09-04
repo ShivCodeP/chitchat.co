@@ -62,6 +62,24 @@ const RightClientBox = ({
   }, []);
 
   useEffect(() => {
+    const GetChatsDetailsOfSingle = async () => {
+      if (click === false) {
+        try {
+          let res = await fetch(`${url}/api/message/${chat._id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getCookie("token")}`,
+            },
+          });
+          let message = await res.json();
+          setMessages([...message]);
+          socket.emit("join chat", chat._id);
+        } catch (error: any) {
+          console.log("error", error);
+        }
+      }
+    };
+
     GetChatsDetailsOfSingle();
     chatCompare = chat;
   }, [chat]);
@@ -81,6 +99,7 @@ const RightClientBox = ({
         }
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
   const POSTChatToSingle = async () => {
@@ -103,23 +122,7 @@ const RightClientBox = ({
       });
   };
 
-  const GetChatsDetailsOfSingle = async () => {
-    if (click === false) {
-      try {
-        let res = await fetch(`${url}/api/message/${chat._id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getCookie("token")}`,
-          },
-        });
-        let message = await res.json();
-        setMessages([...message]);
-        socket.emit("join chat", chat._id);
-      } catch (error: any) {
-        console.log("error", error);
-      }
-    }
-  };
+
   return (
     <RightClient>
       {click && (
