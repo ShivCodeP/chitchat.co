@@ -9,3 +9,6 @@ export const getCookie = (key: string) => {
   return get;
 };
 
+export const removeCookie = (key: string) => {
+  Cookies.remove(key)
+}

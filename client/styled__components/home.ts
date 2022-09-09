@@ -166,18 +166,20 @@ export const HomeClient = styled.div`
   margin-top: 10px;
 `;
 export const LeftClient = styled.div`
-  border: 1px solid red;
+  border: 4px solid white;
+  border-radius: 10px;
 `;
 export const RightClient = styled.div`
-  border: 1px solid red;
+  border: 4px solid white;
+  border-radius: 10px;
 `;
 
 export const ChatList = styled.div`
   width: 95%;
   margin: auto;
   background-color: white;
-  border: "1px solid gray";
-  border-radius: 2px;
+  border: 2px solid black;
+  border-radius: 5px;
   padding: 5px;
 
 `;
